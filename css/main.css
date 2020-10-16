@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web');
 
 body {
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
   background: #00c6ff;
   background: -webkit-linear-gradient(to top, #0072ff, #00c6ff);
   background: linear-gradient(to top, #0072ff, #00c6ff);
@@ -163,4 +162,16 @@ option:disabled {
 .modal-title,
 .modal-body {
   color: #222;
+}
+
+@media screen and (max-width: 1366px) {
+  html {
+    font-size: 80% !important;
+  }
+
+  .datos,
+  .horarios,
+  .turnos {
+    margin: 15px 0px;
+  }
 }

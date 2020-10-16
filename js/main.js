@@ -95,3 +95,15 @@ function registrar(e) {
   $('#modalOk').modal('show');
   e.target.reset();
 }
+
+function enviarMail() {
+  Email.send({
+    SecureToken: "81049978-fbe7-40a5-a10d-056875773893",
+    To : 'info@switchit.com.ar',
+    From : "turnos@colegiociudadjardin.edu.ar",
+    Subject : "Reserva de turno",
+    Body: "Se le informa que el turno solicitado ha sido agendado."
+  }).then(
+    message => alert(message)
+  );
+}
