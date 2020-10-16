@@ -40,11 +40,11 @@ function cargarHorarios(fechaElegida) {
       docFecha.set({ created: new Date });
       docFecha.collection('Clientes').doc('Created').set({ Created: true }, { merge: true })
       .catch(function (error) {
-        console.error('Hubo un error:', error);
+        console.error('Hubo un error al crear la fecha:', error);
       })
     }
   }).catch(function(error) {
-      console.log("Error getting document:", error);
+      console.log("Error al obtener el documento:", error);
   });  
 }
 
@@ -73,15 +73,29 @@ function registrar(e) {
   var nombre = e.target.nombre.value;
   var tel = e.target.tel.value;
   var mail = e.target.mail.value;
-  var motivo = e.target.motivo.value;
-  e.target.reset();
-  var datos = {
+  var motivo = e.target.motivo.value;  
+  var datosForm = {
     Nombre: nombre,
     Mail: mail,
     Telefono: tel,
     Motivo: motivo,
   }
-  console.log(datos);
+  console.log(datosForm);
+
+  var docFecha = ccjTurnos.doc(fecha);
+  docFecha.get().then(function (doc) {
+    if (doc.exists) {
+      docFecha.collection('Clientes').doc(hora).set(datosForm, { merge: true })
+      .catch(function (error) {
+        console.error('Hubo un error al guardar los datos:', error);
+      })
+    } else {
+      console.log('esto no tendria que verse')
+    }
+  }).catch(function(error) {
+      console.log("Error al obtener el documento:", error);
+  });
+  e.target.reset();
 }
 
 function limpiarHoras(opcionesHorarios) {
