@@ -159,3 +159,8 @@ option:disabled {
 .turnos select[aria-disabled=true] {
   border-color: #aaa;
 }
+
+.modal-title,
+.modal-body {
+  color: #222;
+}

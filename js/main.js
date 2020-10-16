@@ -24,9 +24,6 @@ function cargarHorarios(fechaElegida) {
   var docFecha = ccjTurnos.doc(fechaElegida);
   docFecha.get().then(function (doc) {
     if (doc.exists) {
-      // docFecha.collection('Clientes').doc('8hs').get().then(function (respuesta) {
-      //   console.log(respuesta.data());
-      // });
       docFecha.collection('Clientes').get().then(function (horariosDB) {
         horariosDB.forEach(function (horaDB) {
           Array.from(horarioTurno.options).forEach(function (opcion) {
@@ -49,13 +46,17 @@ function cargarHorarios(fechaElegida) {
 }
 
 function showHorario(e) {
-  limpiarHoras(horarioTurno)
+  limpiarHoras(horarioTurno);
+  cargarHorarios(e.target.value);
   var formulario = document.getElementsByClassName('horarios')[0];
   if (formulario.classList.contains('d-none')){
     formulario.classList.add('d-block');
     formulario.classList.remove('d-none');
   }
-  cargarHorarios(e.target.value);
+}
+
+function limpiarHoras(opcionesHorarios) {
+  Array.from(opcionesHorarios).forEach(option => option.removeAttribute('disabled'));
 }
 
 function showDatos() {
@@ -80,8 +81,6 @@ function registrar(e) {
     Telefono: tel,
     Motivo: motivo,
   }
-  console.log(datosForm);
-
   var docFecha = ccjTurnos.doc(fecha);
   docFecha.get().then(function (doc) {
     if (doc.exists) {
@@ -89,15 +88,10 @@ function registrar(e) {
       .catch(function (error) {
         console.error('Hubo un error al guardar los datos:', error);
       })
-    } else {
-      console.log('esto no tendria que verse')
     }
   }).catch(function(error) {
       console.log("Error al obtener el documento:", error);
   });
+  $('#modalOk').modal('show');
   e.target.reset();
-}
-
-function limpiarHoras(opcionesHorarios) {
-  Array.from(opcionesHorarios).forEach(option => option.removeAttribute('disabled'));
 }
