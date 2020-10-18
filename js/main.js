@@ -34,22 +34,28 @@ function cargarHorarios(fechaElegida) {
         });
       });
     } else {
-      docFecha.set({ created: new Date });
-      docFecha.collection('Clientes').doc('Created').set({ Created: true }, { merge: true })
-      .catch(function (error) {
-        console.error('Hubo un error al crear la fecha:', error);
-      })
+      docFecha.set({
+        created: new Date
+      });
+      docFecha.collection('Clientes').doc('Created').set({
+          Created: true
+        }, {
+          merge: true
+        })
+        .catch(function (error) {
+          console.error('Hubo un error al crear la fecha:', error);
+        })
     }
-  }).catch(function(error) {
-      console.log("Error al obtener el documento:", error);
-  });  
+  }).catch(function (error) {
+    console.log("Error al obtener el documento:", error);
+  });
 }
 
 function showHorario(e) {
   limpiarHoras(horarioTurno);
   cargarHorarios(e.target.value);
   var formulario = document.getElementsByClassName('horarios')[0];
-  if (formulario.classList.contains('d-none')){
+  if (formulario.classList.contains('d-none')) {
     formulario.classList.add('d-block');
     formulario.classList.remove('d-none');
   }
@@ -61,7 +67,7 @@ function limpiarHoras(opcionesHorarios) {
 
 function showDatos() {
   var formDatos = document.getElementsByClassName('datos')[0];
-  if (formDatos.classList.contains('d-none')){
+  if (formDatos.classList.contains('d-none')) {
     formDatos.classList.add('d-block');
     formDatos.classList.remove('d-none');
   }
@@ -74,7 +80,7 @@ function registrar(e) {
   var nombre = e.target.nombre.value;
   var tel = e.target.tel.value;
   var mail = e.target.mail.value;
-  var motivo = e.target.motivo.value;  
+  var motivo = e.target.motivo.value;
   var datosForm = {
     Nombre: nombre,
     Mail: mail,
@@ -84,26 +90,16 @@ function registrar(e) {
   var docFecha = ccjTurnos.doc(fecha);
   docFecha.get().then(function (doc) {
     if (doc.exists) {
-      docFecha.collection('Clientes').doc(hora).set(datosForm, { merge: true })
-      .catch(function (error) {
-        console.error('Hubo un error al guardar los datos:', error);
-      })
+      docFecha.collection('Clientes').doc(hora).set(datosForm, {
+          merge: true
+        })
+        .catch(function (error) {
+          console.error('Hubo un error al guardar los datos:', error);
+        })
     }
-  }).catch(function(error) {
-      console.log("Error al obtener el documento:", error);
+  }).catch(function (error) {
+    console.log("Error al obtener el documento:", error);
   });
   $('#modalOk').modal('show');
   e.target.reset();
-}
-
-function enviarMail() {
-  Email.send({
-    SecureToken: "81049978-fbe7-40a5-a10d-056875773893",
-    To : 'info@switchit.com.ar',
-    From : "turnos@colegiociudadjardin.edu.ar",
-    Subject : "Reserva de turno",
-    Body: "Se le informa que el turno solicitado ha sido agendado."
-  }).then(
-    message => alert(message)
-  );
 }
