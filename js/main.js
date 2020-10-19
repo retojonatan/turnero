@@ -86,6 +86,7 @@ function registrar(e) {
     Mail: mail,
     Telefono: tel,
     Motivo: motivo,
+    Estado: 'Activo',
   }
   var docFecha = ccjTurnos.doc(fecha);
   docFecha.get().then(function (doc) {

@@ -29,7 +29,7 @@ function renderFechas(doc) {
     fechaDB.get().then(function (doc) {
       fechaDB.collection('Clientes').get().then(function (horariosDB) {
         horariosDB.forEach(function (horaDB) {
-          if (horaDB.id !== 'Created') {
+          if (horaDB.id !== 'Created' && (horaDB.get('Estado') === 'Activo')) {
             let tbody = document.createElement('tbody');
             let fila = document.createElement('tr');
             let td_fecha = document.createElement('td');
@@ -37,20 +37,33 @@ function renderFechas(doc) {
             let td_nombre = document.createElement('td');
             let td_telefono = document.createElement('td');
             let td_mail = document.createElement('td');
+            let td_motivo = document.createElement('td');
             td_fecha.textContent = doc.id;
             td_hora.textContent = horaDB.id;
             td_nombre.textContent = horaDB.get('Nombre');
             td_telefono.textContent = horaDB.get('Telefono');
             td_mail.textContent = horaDB.get('Mail');
+            td_motivo.textContent = horaDB.get('Motivo');
             fila.appendChild(td_fecha);
             fila.appendChild(td_hora);
             fila.appendChild(td_nombre);
             fila.appendChild(td_telefono);
             fila.appendChild(td_mail);
+            fila.appendChild(td_motivo);
             tbody.appendChild(fila)
             tabla.appendChild(tbody);
           }
         })
+      })
+    })
+  } else {
+    fechaDB.collection('Clientes').get().then(function (horariosPasados) {
+      horariosPasados.forEach(function (horaPasada) {
+        if (horaPasada.id !== 'Created' && (horaPasada.get('Estado') === 'Activo')) {
+          fechaDB.collection('Clientes').doc(horaPasada.id).update({
+            Estado: 'Pasado'
+          })
+        }
       })
     })
   }
@@ -72,7 +85,9 @@ function compararFecha(fecha) {
   fechaMM = fechaArray[1];
   fechaYYYY = fechaArray[2];
   if (fechaYYYY >= yyyy) {
-    if (fechaMM >= mm) {
+    if (fechaMM > mm) {
+      return true;
+    } else if (fechaMM = mm) {
       return fechaDD >= dd;
     }
   }

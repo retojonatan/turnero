@@ -2,9 +2,9 @@
 
 body {
   min-height: 100vh;
-  background: #00c6ff;
-  background: -webkit-linear-gradient(to top, #0072ff, #00c6ff);
-  background: linear-gradient(to top, #0072ff, #00c6ff);
+  background: #ffc107;
+  background: -webkit-linear-gradient(to top, #ffc107, #ffc107);
+  background: #ffc107;
   color: #fff;
 }
 
@@ -16,7 +16,7 @@ body {
 .header,
 .content,
 .footer {
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: #343a40;
   margin: 0;
   padding: 10px 20px;
   font-family: 'Titillium Web';
@@ -56,7 +56,7 @@ body {
   box-shadow: 0 1px 0 1px rgba(0, 0, 0, .04);
   border-radius: .5em;
   color: #fff;
-  background-color: #02aa99;
+  background-color: #34c759;
   border: none;
   font-weight: bolder;
 }
