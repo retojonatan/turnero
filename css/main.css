@@ -164,6 +164,13 @@ option:disabled {
   color: #222;
 }
 
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
 @media screen and (max-width: 1366px) {
   html {
     font-size: 80% !important;
@@ -173,5 +180,15 @@ option:disabled {
   .horarios,
   .turnos {
     margin: 15px 0px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  html {
+    font-size: 75%;
+  }
+
+  .content {
+    padding: 10px 0;
   }
 }
