@@ -74,7 +74,6 @@ function showDatos() {
 }
 
 function registrar(e) {
-  e.preventDefault();
   var fecha = e.target.fechaTurno.value;
   var hora = e.target.horarioTurno.value;
   var nombre = e.target.nombre.value;
@@ -89,18 +88,71 @@ function registrar(e) {
     Estado: 'Activo',
   }
   var docFecha = ccjTurnos.doc(fecha);
-  docFecha.get().then(function (doc) {
-    if (doc.exists) {
-      docFecha.collection('Clientes').doc(hora).set(datosForm, {
-          merge: true
+  if (tieneTurno(mail)) {
+    console.log('tiene turno')
+  } else {
+    e.preventDefault();
+    docFecha.get().then(function (doc) {
+      if (doc.exists) {
+        docFecha.collection('Clientes').doc(hora).set(datosForm, {
+            merge: true
+          })
+          .catch(function (error) {
+            console.error('Hubo un error al guardar los datos:', error);
+          })
+      }
+    }).catch(function (error) {
+      console.log("Error al obtener el documento:", error);
+    });
+    $('#modalOk').modal('show');
+    e.target.reset();
+  }
+}
+
+async function consulta() {
+  var mail = "silvanaherrera737@gmail.com"
+  var existeTurno = false;
+  try {
+    await ccjTurnos.get().then((fechas) => {
+      fechas.docs.forEach(fecha => {
+        var fechaDB = ccjTurnos.doc(fecha.id);
+        fechaDB.collection('Clientes')
+          .where("Mail", "==", mail)
+          .where("Estado", "==", "Activo")
+          .get()
+          .then((consulta) => {
+            consulta.forEach(function (doc) {
+              console.log(doc.data());
+              existeTurno = true;
+            })
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+      })
+    })
+    console.log("tiene turno:" + existeTurno)
+    return existeTurno;
+  } catch (e) {
+    console.error(error);
+  }
+}
+
+async function tieneTurno(mail) {
+  try {
+    let resultado = await ccjTurnos.get().then((fechas) => {
+      fechas.docs.forEach(async function (fecha) {
+        var fechaDB = await ccjTurnos.doc(fecha.id);
+        fechaDB.collection('Clientes').get().then(async function (horariosDB) {
+          horariosDB.forEach(function (horaDB) {
+            if ((horaDB.id !== 'Created') && (horaDB.get('Mail') === mail) && (horaDB.get('Estado') === 'Activo')) {
+              return resultado = true
+            }
+          })
         })
-        .catch(function (error) {
-          console.error('Hubo un error al guardar los datos:', error);
-        })
-    }
-  }).catch(function (error) {
-    console.log("Error al obtener el documento:", error);
-  });
-  $('#modalOk').modal('show');
-  e.target.reset();
+      })
+    })
+  } catch (e) {
+    console.error(e)
+  }
 }

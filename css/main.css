@@ -164,6 +164,18 @@ option:disabled {
   color: #222;
 }
 
+.thead-verde {
+  background-color: #34c759;
+  color: white;
+  font-size: 1.15rem;
+}
+
+.thead-amarillo {
+  background-color: #007aff;
+  color: white;
+  font-size: 1.15rem;
+}
+
 td {
   white-space: nowrap;
   overflow: hidden;
