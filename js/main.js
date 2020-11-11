@@ -20,6 +20,10 @@ horarioTurno.addEventListener('change', (e) => showDatos(e));
 const registroForm = document.getElementById('formulario');
 registroForm.addEventListener('submit', (e) => registrar(e));
 
+$('#modalOk').on('hidden.bs.modal', function () {
+  location.reload();
+});
+
 function cargarHorarios(fechaElegida) {
   var docFecha = ccjTurnos.doc(fechaElegida);
   docFecha.get().then(function (doc) {
@@ -88,71 +92,19 @@ function registrar(e) {
     Estado: 'Activo',
   }
   var docFecha = ccjTurnos.doc(fecha);
-  if (tieneTurno(mail)) {
-    console.log('tiene turno')
-  } else {
-    e.preventDefault();
-    docFecha.get().then(function (doc) {
-      if (doc.exists) {
-        docFecha.collection('Clientes').doc(hora).set(datosForm, {
-            merge: true
-          })
-          .catch(function (error) {
-            console.error('Hubo un error al guardar los datos:', error);
-          })
-      }
-    }).catch(function (error) {
-      console.log("Error al obtener el documento:", error);
-    });
-    $('#modalOk').modal('show');
-    e.target.reset();
-  }
-}
-
-async function consulta() {
-  var mail = "silvanaherrera737@gmail.com"
-  var existeTurno = false;
-  try {
-    await ccjTurnos.get().then((fechas) => {
-      fechas.docs.forEach(fecha => {
-        var fechaDB = ccjTurnos.doc(fecha.id);
-        fechaDB.collection('Clientes')
-          .where("Mail", "==", mail)
-          .where("Estado", "==", "Activo")
-          .get()
-          .then((consulta) => {
-            consulta.forEach(function (doc) {
-              console.log(doc.data());
-              existeTurno = true;
-            })
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
-      })
-    })
-    console.log("tiene turno:" + existeTurno)
-    return existeTurno;
-  } catch (e) {
-    console.error(error);
-  }
-}
-
-async function tieneTurno(mail) {
-  try {
-    let resultado = await ccjTurnos.get().then((fechas) => {
-      fechas.docs.forEach(async function (fecha) {
-        var fechaDB = await ccjTurnos.doc(fecha.id);
-        fechaDB.collection('Clientes').get().then(async function (horariosDB) {
-          horariosDB.forEach(function (horaDB) {
-            if ((horaDB.id !== 'Created') && (horaDB.get('Mail') === mail) && (horaDB.get('Estado') === 'Activo')) {
-              return resultado = true
-            }
-          })
+  e.preventDefault();
+  docFecha.get().then(function (doc) {
+    if (doc.exists) {
+      docFecha.collection('Clientes').doc(hora).set(datosForm, {
+          merge: true
         })
-      })
-    })
-  } catch (e) {
-    console.error(e)
-  }
+        .catch(function (error) {
+          console.error('Hubo un error al guardar los datos:', error);
+        })
+    }
+  }).catch(function (error) {
+    console.log("Error al obtener el documento:", error);
+  });
+  $('#modalOk').modal('show');
+  e.target.reset();
 }
